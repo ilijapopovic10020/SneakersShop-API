@@ -1,4 +1,5 @@
 using System;
+using System.Reflection.PortableExecutable;
 using Microsoft.EntityFrameworkCore;
 using SneakersShop.Application.Payment;
 using SneakersShop.Application.UseCases.Commands.Orders;
@@ -26,7 +27,7 @@ public class EfCreateOrderCommand(SneakersShopDbContext context, IApplicationUse
 
         decimal total = 0;
 
-        var productSizeMap = new List<(ProductSize Size, CreateOrderItemDto Dto)>();
+        var productSizeMap = new List<(ProductSize Size, CreateOrderItemDto Dto, decimal Price)>();
 
         foreach (var item in request.Items)
         {
@@ -38,19 +39,35 @@ public class EfCreateOrderCommand(SneakersShopDbContext context, IApplicationUse
             if (productSize == null)
                 throw new Exception($"ProductSize for ProductColorId {item.ProductColorId} and SizeId {item.SizeId} not found.");
 
-            total += productSize.ProductColor.Product.Price * item.Quantity;
-            productSizeMap.Add((productSize, item));
+            var basePrice = productSize.ProductColor.Product.Price;
+
+            var activeDiscount = productSize.ProductColor.ProductDiscounts
+                .Where(pd => pd.Discount.IsActive)
+                .Select(pd => pd.Discount)
+                .FirstOrDefault();
+
+            decimal finalPrice = basePrice;
+
+            if (activeDiscount != null)
+            {
+                finalPrice = Math.Round(basePrice * (1 - activeDiscount.Percentage / 100), 2);
+            }
+
+            total += finalPrice * item.Quantity;
+            productSizeMap.Add((productSize, item, finalPrice));
         }
+
+        var payment = new PaymentCardDto
+        {
+            CardHolder = request.CardHolder!,
+            CardNumber = request.CardNumber!,
+            Cvv = request.Cvv!,
+            Expiration = request.Expiration!
+        };
 
         if (request.PaymentType == PaymentType.Card)
         {
-            var success = _paymentProcessor.ProcessPayment(
-                request.CardHolder!,
-                total,
-                request.CardNumber!,
-                request.Cvv!,
-                request.Expiration!
-            );
+            var success = _paymentProcessor.ProcessPayment(payment);
 
             if (!success)
                 throw new Exception("Plaćanje karticom nije uspelo.");
@@ -79,7 +96,7 @@ public class EfCreateOrderCommand(SneakersShopDbContext context, IApplicationUse
             OrderId = order.Id,
             ProductSizeId = x.Size.Id,
             Quantity = x.Dto.Quantity,
-            Price = x.Size.ProductColor.Product.Price
+            Price = x.Price
         }).ToList();
 
         Context.OrderItems.AddRange(orderItems);

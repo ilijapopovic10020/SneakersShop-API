@@ -15,7 +15,6 @@ public class OrderDto : BaseDto
     public string City { get; set; }
     public string ZipCode { get; set; }
     public IEnumerable<OrderItemDto> Items { get; set; }
-
 }
 
 public class OrderItemDto : BaseDto

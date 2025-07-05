@@ -4,9 +4,6 @@ using SneakersShop.Application.UseCases.Queries.Orders;
 using SneakersShop.Implementation.Extensions;
 using SneakersShop.DataAccess;
 using SneakersShop.Domain;
-using Microsoft.EntityFrameworkCore;
-using SneakersShop.Application.Exceptions;
-using SneakersShop.Domain.Entities;
 
 namespace SneakersShop.Implementation.UseCases.Queries.Orders;
 

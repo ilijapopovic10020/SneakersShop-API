@@ -49,6 +49,7 @@ using SneakersShop.Implementation.UseCases.Queries.Reviews;
 using SneakersShop.Implementation.UseCases.Queries.Sizes;
 using SneakersShop.Implementation.UseCases.Queries.Users;
 using SneakersShop.Implementation.Validators.Brands;
+using SneakersShop.Implementation.Validators.Payments;
 using SneakersShop.Implementation.Validators.Products;
 using SneakersShop.Implementation.Validators.Reviews;
 using SneakersShop.Implementation.Validators.Users;
@@ -221,5 +222,8 @@ public static class ContainerExtensions
         // Reviews
         services.AddTransient<CreateReviewValidator>();
         services.AddTransient<UpdateReviewValidator>();
+
+        // Payments
+        services.AddTransient<MockPaymentValidator>();
     }
 }

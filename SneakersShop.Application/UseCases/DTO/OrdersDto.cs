@@ -8,7 +8,7 @@ public class OrdersDto : BaseDto
     public decimal TotalPrice { get; set; }
     public DateTime OrderDate { get; set; }
     public OrderStatus OrderStatus { get; set; }
-    public IEnumerable<OrdersItemsDto> Items { get; set; } 
+    public IEnumerable<OrdersItemsDto> Items { get; set; }
 }
 
 public class OrdersItemsDto

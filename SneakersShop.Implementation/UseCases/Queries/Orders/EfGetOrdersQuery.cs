@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Intrinsics.X86;
 using Microsoft.EntityFrameworkCore;
 using SneakersShop.Application.Exceptions;
 using SneakersShop.Application.UseCases.DTO;
@@ -6,6 +7,7 @@ using SneakersShop.Application.UseCases.DTO.Searches;
 using SneakersShop.Application.UseCases.Queries.Orders;
 using SneakersShop.DataAccess;
 using SneakersShop.Domain;
+using SneakersShop.Domain.Entities;
 
 namespace SneakersShop.Implementation.UseCases.Queries.Orders;
 
@@ -27,6 +29,7 @@ public class EfGetOrdersQuery(SneakersShopDbContext context, IApplicationUser? u
                                    .ThenInclude(ps => ps.ProductColor)
                                    .ThenInclude(pc => pc.ProductImages)
                                    .ThenInclude(pi => pi.Image)
+                                   .Include(o => o.OrderItems)
                                    .Where(o => o.UserId == search.Id)
                                    .OrderByDescending(o => o.OrderDate)
                                    .AsQueryable();
