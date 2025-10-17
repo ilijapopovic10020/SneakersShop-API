@@ -162,6 +162,7 @@ public static class ContainerExtensions
 
         // Addresses
         services.AddTransient<IGetAddressesQuery, EfGetAddressesQuery>();
+        services.AddTransient<IFindAddressQuery, EfFindAddressQuery>();
 
         // Carts
         services.AddTransient<IFindCartQuery, EfFindCartQuery>();

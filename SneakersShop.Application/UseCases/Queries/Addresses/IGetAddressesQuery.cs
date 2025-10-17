@@ -4,7 +4,7 @@ using SneakersShop.Application.UseCases.DTO.Searches;
 
 namespace SneakersShop.Application.UseCases.Queries.Addresses;
 
-public interface IGetAddressesQuery : IQuery<BaseSearch, IEnumerable<AddressDto>>
+public interface IGetAddressesQuery : IQuery<BaseSearch, IEnumerable<AddressesDto>>
 {
     
 }

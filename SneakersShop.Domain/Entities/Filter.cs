@@ -8,5 +8,5 @@ public enum Filter
     Newest,
     PriceLowToHigh,
     PriceHighToLow,
-    BestRated
+    BestRated,
 }

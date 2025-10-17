@@ -11,7 +11,11 @@ using SneakersShop.Implementation.Extensions;
 
 namespace SneakersShop.Implementation.UseCases.Commands.Orders;
 
-public class EfCreateOrderCommand(SneakersShopDbContext context, IApplicationUser? user, IPaymentProcessor paymentProcessor) : EfUseCase(context, user), ICreateOrderCommand
+public class EfCreateOrderCommand(
+    SneakersShopDbContext context,
+    IApplicationUser? user,
+    IPaymentProcessor paymentProcessor
+) : EfUseCase(context, user), ICreateOrderCommand
 {
     private IPaymentProcessor _paymentProcessor = paymentProcessor;
     public int Id => 21;
@@ -31,18 +35,22 @@ public class EfCreateOrderCommand(SneakersShopDbContext context, IApplicationUse
 
         foreach (var item in request.Items)
         {
-            var productSize = Context.ProductSizes
-                .Include(ps => ps.ProductColor)
-                    .ThenInclude(pc => pc.Product)
-                .FirstOrDefault(ps => ps.ProductColorId == item.ProductColorId && ps.SizeId == item.SizeId);
+            var productSize = Context
+                .ProductSizes.Include(ps => ps.ProductColor)
+                .ThenInclude(pc => pc.Product)
+                .FirstOrDefault(ps =>
+                    ps.ProductColorId == item.ProductColorId && ps.SizeId == item.SizeId
+                );
 
             if (productSize == null)
-                throw new Exception($"ProductSize for ProductColorId {item.ProductColorId} and SizeId {item.SizeId} not found.");
+                throw new Exception(
+                    $"ProductSize for ProductColorId {item.ProductColorId} and SizeId {item.SizeId} not found."
+                );
 
             var basePrice = productSize.ProductColor.Product.Price;
 
-            var activeDiscount = productSize.ProductColor.ProductDiscounts
-                .Where(pd => pd.Discount.IsActive)
+            var activeDiscount = productSize
+                .ProductColor.ProductDiscounts.Where(pd => pd.Discount.IsActive)
                 .Select(pd => pd.Discount)
                 .FirstOrDefault();
 
@@ -62,7 +70,7 @@ public class EfCreateOrderCommand(SneakersShopDbContext context, IApplicationUse
             CardHolder = request.CardHolder!,
             CardNumber = request.CardNumber!,
             Cvv = request.Cvv!,
-            Expiration = request.Expiration!
+            Expiration = request.Expiration!,
         };
 
         if (request.PaymentType == PaymentType.Card)
@@ -85,19 +93,21 @@ public class EfCreateOrderCommand(SneakersShopDbContext context, IApplicationUse
             OrderStatus = OrderStatus.Pending,
             ReceivedDate = null,
             AddressId = request.AddressId,
-            Notes = request.Notes
+            Notes = request.Notes,
         };
 
         Context.Orders.Add(order);
         Context.SaveChanges();
 
-        var orderItems = productSizeMap.Select(x => new OrderItem
-        {
-            OrderId = order.Id,
-            ProductSizeId = x.Size.Id,
-            Quantity = x.Dto.Quantity,
-            Price = x.Price
-        }).ToList();
+        var orderItems = productSizeMap
+            .Select(x => new OrderItem
+            {
+                OrderId = order.Id,
+                ProductSizeId = x.Size.Id,
+                Quantity = x.Dto.Quantity,
+                Price = x.Price,
+            })
+            .ToList();
 
         Context.OrderItems.AddRange(orderItems);
         Context.SaveChanges();

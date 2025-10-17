@@ -1,5 +1,3 @@
-using System;
-
 namespace SneakersShop.Domain.Entities;
 
 public class Order : Entity
@@ -13,7 +11,6 @@ public class Order : Entity
     public DateTime? ReceivedDate { get; set; }
     public OrderStatus OrderStatus { get; set; }
     public string? Notes { get; set; }
-
 
     public virtual User User { get; set; }
     public virtual Address Address { get; set; }

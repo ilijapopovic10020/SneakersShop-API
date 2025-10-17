@@ -8,7 +8,9 @@ using SneakersShop.Domain.Entities;
 
 namespace SneakersShop.Implementation.UseCases.Commands.Carts;
 
-public class EfUpsertCartCommand(SneakersShopDbContext context, IApplicationUser? user) : EfUseCase(context, user), IUpsertCartCommand
+public class EfUpsertCartCommand(SneakersShopDbContext context, IApplicationUser? user)
+    : EfUseCase(context, user),
+        IUpsertCartCommand
 {
     public int Id => 36;
 
@@ -38,7 +40,7 @@ public class EfUpsertCartCommand(SneakersShopDbContext context, IApplicationUser
                 UserId = User.Id,
                 CartItems = cartItemsJson,
                 CreatedAt = DateTime.UtcNow,
-                IsActive = true
+                IsActive = true,
             };
 
             Context.Carts.Add(cart);

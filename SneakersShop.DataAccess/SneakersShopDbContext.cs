@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using SneakersShop.Domain;
 using SneakersShop.Domain.Entities;
+using SneakersShop.Domain.Entities.Views;
 
 namespace SneakersShop.DataAccess;
 
@@ -9,28 +9,31 @@ public class SneakersShopDbContext : DbContext
 {
     public IApplicationUser User { get; }
 
-    public SneakersShopDbContext(IApplicationUser user = null)
+    public SneakersShopDbContext(IApplicationUser user)
     {
         User = user;
     }
 
-    public SneakersShopDbContext()
-    {
-
-    }
+    public SneakersShopDbContext() { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
         modelBuilder.Entity<UserUseCase>().HasKey(x => new { x.RoleId, x.UseCaseId });
-        modelBuilder.Entity<ProductDiscount>().HasKey(pd => new { pd.ProductColorId, pd.DiscountId });
+        modelBuilder
+            .Entity<ProductDiscount>()
+            .HasKey(pd => new { pd.ProductColorId, pd.DiscountId });
+        modelBuilder.Entity<ProductOverview>().HasNoKey().ToView("vw_ProductOverview");
+        modelBuilder.Entity<ProductDetailOverview>().ToView("vw_ProductDetailOverview").HasKey(x => new { x.ProductColorId, x.FilePath });
 
         base.OnModelCreating(modelBuilder);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(@"Data Source=ILIJA\SQLEXPRESS;Initial Catalog=SneakersShopdb;Integrated Security=True;Trust Server Certificate=True");
+        optionsBuilder.UseSqlServer(
+            @"Data Source=ILIJA\SQLEXPRESS;Initial Catalog=SneakersShopdb;Integrated Security=True;Trust Server Certificate=True"
+        );
     }
 
     public override int SaveChanges()
@@ -78,4 +81,6 @@ public class SneakersShopDbContext : DbContext
     public DbSet<ProductDiscount> ProductDiscounts { get; set; }
     public DbSet<Cart> Carts { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<ProductOverview> ProductOverview { get; set; }
+    public DbSet<ProductDetailOverview> ProductDetailOverview { get; set; }
 }

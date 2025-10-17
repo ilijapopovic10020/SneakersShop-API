@@ -12,15 +12,19 @@ namespace SneakersShop.API.Controllers
         private readonly JwtManager _manager = manager;
 
         [HttpPost]
-        public IActionResult Post([FromBody] AuthRequest request, [FromQuery] bool revokeOld = false)
+        public IActionResult Post(
+            [FromBody] AuthRequest request,
+            [FromQuery] bool revokeOld = false
+        )
         {
-            var (accessToken, refreshToken) = _manager.MakeToken(request.Username, request.Password, request.DeviceInfo, revokeOld);
+            var (accessToken, refreshToken) = _manager.MakeToken(
+                request.Username,
+                request.Password,
+                request.DeviceInfo,
+                revokeOld
+            );
 
-            return Ok(new TokenResponse
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken
-            });
+            return Ok(new TokenResponse { AccessToken = accessToken, RefreshToken = refreshToken });
         }
 
         [HttpPost("Refresh")]

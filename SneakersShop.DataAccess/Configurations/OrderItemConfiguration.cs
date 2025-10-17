@@ -12,9 +12,10 @@ public class OrderItemConfiguration : EntityConfiguration<OrderItem>
         builder.Property(x => x.Quantity).IsRequired();
         builder.Property(x => x.Price).HasColumnType("decimal(18,2)");
 
-        builder.HasOne(x => x.ProductSize)
-               .WithMany(x => x.OrderItems)
-               .HasForeignKey(x => x.ProductSizeId)
-               .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasOne(x => x.ProductSize)
+            .WithMany(x => x.OrderItems)
+            .HasForeignKey(x => x.ProductSizeId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

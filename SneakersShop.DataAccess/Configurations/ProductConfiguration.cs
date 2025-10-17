@@ -13,19 +13,22 @@ public class ProductConfiguration : EntityConfiguration<Product>
         builder.Property(p => p.Name).IsRequired().HasMaxLength(200);
         builder.Property(p => p.Price).HasColumnType("decimal(18,2)");
 
-        builder.HasOne(x => x.Brand)
-               .WithMany(x => x.Products)
-               .HasForeignKey(x => x.BrandId)
-               .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasOne(x => x.Brand)
+            .WithMany(x => x.Products)
+            .HasForeignKey(x => x.BrandId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(x => x.Category)
-               .WithMany(x => x.Products)
-               .HasForeignKey(x => x.CategoryId)
-               .OnDelete(DeleteBehavior.Restrict);
-       
-       builder.HasMany(x => x.Reviews)
-               .WithOne(x => x.Product)
-               .HasForeignKey(x => x.ProductId)
-               .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasOne(x => x.Category)
+            .WithMany(x => x.Products)
+            .HasForeignKey(x => x.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasMany(x => x.Reviews)
+            .WithOne(x => x.Product)
+            .HasForeignKey(x => x.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -27,7 +27,9 @@ public class EfGetReviewsQuery(SneakersShopDbContext context, IApplicationUser u
         
         var reviews = Context.Reviews.Include(r => r.User)
                                      .ThenInclude(u => u.Image)
-                                     .Where(r => r.ProductId == product).AsQueryable();
+                                     .Where(r => r.ProductId == product)
+                                     .OrderByDescending(x => x.Id)
+                                     .AsQueryable();
 
         if (search.PerPage == null || search.PerPage < 1)
         {

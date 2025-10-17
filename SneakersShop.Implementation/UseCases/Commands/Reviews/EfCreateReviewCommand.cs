@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using SneakersShop.Application.Exceptions;
 using SneakersShop.Application.UseCases.Commands.Reviews;
 using SneakersShop.Application.UseCases.DTO;
@@ -20,10 +21,8 @@ public class EfCreateReviewCommand(SneakersShopDbContext context, IApplicationUs
 
     public void Execute(CreateReviewDto request)
     {
-        if (!Context.Products.Any(x => x.Id == request.ProductId))
-        {
-            throw new EntityNotFoundException(request.ProductId, nameof(Product));
-        }
+        var product = Context.ProductColors.FirstOrDefault(x => x.Id == request.ProductId)
+                      ?? throw new EntityNotFoundException(request.ProductId, nameof(ProductColor));
 
         if (!Context.Users.Any(x => x.Id == request.UserId))
         {
@@ -34,7 +33,7 @@ public class EfCreateReviewCommand(SneakersShopDbContext context, IApplicationUs
 
         var review = new Review
         {
-            ProductId = request.ProductId,
+            ProductId = product.ProductId,
             UserId = request.UserId,
             Comment = request.Comment,
             Rating = request.Rating

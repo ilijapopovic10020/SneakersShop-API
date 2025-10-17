@@ -20,6 +20,12 @@ namespace SneakersShop.API.Controllers
             return Ok(_queryHandler.HandleQuery(query, search));
         }
 
+        [HttpGet("{id}")]
+        public IActionResult Get(int id, [FromServices] IFindAddressQuery query)
+        {
+            return Ok(_queryHandler.HandleQuery(query, id));
+        }
+
         [HttpPost]
         public IActionResult Post([FromBody] CreateAddressDto dto, [FromServices] ICreateAddressCommand command)
         {

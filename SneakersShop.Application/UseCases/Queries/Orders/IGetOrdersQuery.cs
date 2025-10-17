@@ -4,7 +4,4 @@ using SneakersShop.Application.UseCases.DTO.Searches;
 
 namespace SneakersShop.Application.UseCases.Queries.Orders;
 
-public interface IGetOrdersQuery : IQuery<PagedSearchId, IEnumerable<OrdersDto>>
-{
-
-}
+public interface IGetOrdersQuery : IQuery<BasePagedSearch, PagedResponse<OrdersDto>> { }

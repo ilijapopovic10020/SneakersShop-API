@@ -11,10 +11,11 @@ public class BrandConfiguration : EntityConfiguration<Brand>
     {
         builder.Property(x => x.Name).IsRequired(true);
         builder.HasIndex(x => x.Name);
-        
-        builder.HasOne(x => x.Image)
-               .WithMany()
-               .HasForeignKey(x => x.ImageId)
-               .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasOne(x => x.Image)
+            .WithMany()
+            .HasForeignKey(x => x.ImageId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

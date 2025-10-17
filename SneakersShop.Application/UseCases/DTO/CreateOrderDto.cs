@@ -11,7 +11,7 @@ public class CreateOrderDto
     public string? CardNumber { get; set; }
     public string? Cvv { get; set; }
     public string? Expiration { get; set; }
-    public IEnumerable<CreateOrderItemDto> Items { get; set; }
+    public IEnumerable<CreateOrderItemDto> Items { get; set; } = [];
     public int AddressId { get; set; }
 }
 

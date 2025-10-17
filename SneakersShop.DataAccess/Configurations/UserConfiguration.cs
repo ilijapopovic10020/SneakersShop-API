@@ -19,23 +19,27 @@ public class UserConfiguration : EntityConfiguration<User>
         builder.HasIndex(x => x.Email).IsUnique();
         builder.HasIndex(x => x.Username).IsUnique();
 
-        builder.HasOne(x => x.Image)
-               .WithMany()
-               .HasForeignKey(x => x.ImageId)
-               .OnDelete(DeleteBehavior.SetNull);
+        builder
+            .HasOne(x => x.Image)
+            .WithMany()
+            .HasForeignKey(x => x.ImageId)
+            .OnDelete(DeleteBehavior.SetNull);
 
-        builder.HasMany(x => x.Reviews)
-               .WithOne(x => x.User)
-               .HasForeignKey(x => x.UserId)
-               .OnDelete(DeleteBehavior.Restrict);
-               
-        builder.HasMany(x => x.Favorites)
-               .WithOne(x => x.User)
-               .HasForeignKey(x => x.UserId)               
-               .OnDelete(DeleteBehavior.Restrict);
-       builder.HasMany(x => x.Orders)
-              .WithOne(x => x.User)
-              .HasForeignKey(x => x.UserId)
-              .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasMany(x => x.Reviews)
+            .WithOne(x => x.User)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasMany(x => x.Favorites)
+            .WithOne(x => x.User)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasMany(x => x.Orders)
+            .WithOne(x => x.User)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

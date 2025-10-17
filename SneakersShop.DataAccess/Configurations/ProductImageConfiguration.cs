@@ -11,12 +11,14 @@ public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
     {
         builder.HasKey(x => new { x.ProductColorId, x.ImageId });
 
-        builder.HasOne(x => x.ProductColor)
+        builder
+            .HasOne(x => x.ProductColor)
             .WithMany(x => x.ProductImages)
             .HasForeignKey(x => x.ProductColorId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(x => x.Image)
+        builder
+            .HasOne(x => x.Image)
             .WithMany(x => x.ImageProducts)
             .HasForeignKey(x => x.ImageId)
             .OnDelete(DeleteBehavior.Cascade);
